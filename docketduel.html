@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
+  <title>Docket Duel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0b0b0d;
+      --bg2: #15151b;
+      --panel-border: rgba(255,255,255,0.10);
+      --text: #f5f7fb;
+      --muted: #bfc5d2;
+      --gold1: #ffe066;
+      --gold2: #ffb703;
+      --gold3: #ff8c00;
+      --green: #34d17b;
+      --red: #ff5c74;
+      --shadow: 0 20px 50px rgba(0,0,0,.45);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-pill: 999px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(255,185,0,.10), transparent 30%),
+        radial-gradient(circle at bottom, rgba(77,123,255,.10), transparent 30%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+    button { font: inherit; border: 0; cursor: pointer; }
+
+    .app {
+      width: min(100%, 460px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screen { display: none; width: 100%; }
+    .screen.active { display: block; }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .pill, .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      font-size: .84rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .sub {
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.35;
+      font-size: 1rem;
+      max-width: 22ch;
+      margin: 18px auto 0;
+    }
+
+    .splash-logo {
+      width: min(100%, 330px);
+      margin: 0 auto 18px;
+      border-radius: 24px;
+      box-shadow: 0 18px 48px rgba(0,0,0,.45);
+    }
+
+    .splash-title {
+      font-family: 'Archivo Black', sans-serif;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-size: 2rem;
+      line-height: 1;
+      margin-top: 8px;
+    }
+
+    .splash-sub {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 8px;
+      font-size: .96rem;
+    }
+
+    .reveal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .battle-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .vs-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .vs-image {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
+    }
+
+    .logo-triangle {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      margin-top: 20px;
+    }
+
+    .triangle-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 82px;
+      height: 82px;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
+
+    .triangle-center img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,.28));
+    }
+
+    .triangle-logo {
+      position: absolute;
+      width: 126px;
+      min-height: 126px;
+      padding: 14px;
+      border-radius: 24px;
+      background: #f4f4f5;
+      color: #141414;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .triangle-logo img {
+      width: 84px;
+      height: 84px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 10px;
+    }
+
+    .triangle-name {
+      margin-top: 10px;
+      font-size: .95rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .aldi-node {
+      top: 0;
+      left: 8px;
+    }
+
+    .coles-node {
+      top: 0;
+      right: 8px;
+    }
+
+    .woolworths-node {
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
+
+    .card {
+      background: #f4f4f5;
+      color: #141414;
+      border-radius: 26px;
+      padding: 12px;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease, filter .18s ease;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 10px;
+    }
+
+    .name {
+      margin-top: 10px;
+      font-size: .97rem;
+      line-height: 1.18;
+      font-weight: 900;
+      letter-spacing: -.01em;
+    }
+
+    .store {
+      margin-top: 6px;
+      font-size: .82rem;
+      color: #5a5f69;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: .82rem;
+      font-weight: 900;
+      color: #8a8f99;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .pick {
+      appearance: none;
+      background: transparent;
+      padding: 0;
+      width: 100%;
+      color: inherit;
+    }
+
+    .pick:active { transform: scale(.985); }
+
+    .cta, .secondary {
+      width: 100%;
+      min-height: 58px;
+      margin-top: 16px;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -.01em;
+    }
+
+    .cta {
+      color: #141414;
+      background: linear-gradient(135deg, var(--gold1), var(--gold2) 60%, var(--gold3));
+      box-shadow: 0 12px 28px rgba(255,183,3,.30), inset 0 1px 0 rgba(255,255,255,.35);
+    }
+
+    .secondary {
+      color: var(--text);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+    }
+
+    .message {
+      margin-top: 14px;
+      text-align: center;
+      font-weight: 900;
+      font-size: 1rem;
+      line-height: 1.35;
+    }
+
+    .good { color: var(--green); }
+    .bad  { color: var(--red); }
+
+    .selected { outline: 4px solid rgba(255,183,3,.85); }
+
+    .cheapest {
+      outline: 4px solid rgba(52,209,123,.95);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 20px 42px rgba(52,209,123,.35);
+    }
+
+    .wrong {
+      outline: 4px solid rgba(255,92,116,.95);
+      opacity: .52;
+      filter: grayscale(.35);
+    }
+
+    .price {
+      margin-top: 12px;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 56px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 1.8rem;
+      line-height: 1;
+      font-weight: 900;
+      color: #121212;
+      background: radial-gradient(circle at top, #fff3a6 0%, #ffd84d 35%, #ffb703 70%, #ff8c00 100%);
+      box-shadow: 0 16px 32px rgba(255,183,3,.40), inset 0 2px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.10);
+      transform: rotate(-1deg);
+      text-shadow: 0 1px 0 rgba(255,255,255,.25);
+    }
+
+    .price::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 999px;
+      border: 2px dashed rgba(255,255,255,.35);
+      pointer-events: none;
+    }
+
+    .price::after {
+      content: "KO PRICE";
+      position: absolute;
+      top: -14px;
+      right: -6px;
+      font-size: .62rem;
+      font-weight: 900;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 999px;
+      color: #ffd84d;
+      background: #111111;
+      box-shadow: 0 8px 18px rgba(0,0,0,.25);
+    }
+
+    .share-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.10);
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 390px) {
+      .card img { height: 160px; }
+      .price { font-size: 1.55rem; min-height: 50px; }
+      .vs-image { width: 54px; height: 54px; }
+
+      .logo-triangle {
+        height: 290px;
+      }
+
+      .triangle-logo {
+        width: 112px;
+        min-height: 112px;
+        padding: 12px;
+      }
+
+      .triangle-logo img {
+        width: 74px;
+        height: 74px;
+      }
+
+      .triangle-center {
+        width: 72px;
+        height: 72px;
+      }
+
+      .triangle-center img {
+        width: 62px;
+        height: 62px;
+      }
+    }
+  </style>
+</head>
+<body>
+<main class="app">
+
+  <section class="screen active" id="splash-screen">
+    <div class="panel">
+      <img src="./docketduel.jpg" alt="Docket Duel" class="splash-logo" onerror="this.style.display='none'">
+      <div class="splash-title">Docket Duel</div>
+      <p class="splash-sub">Tap play to enter the ring.</p>
+      <button class="cta" id="splash-play-btn" type="button">Play</button>
+    </div>
+  </section>
+
+  <section class="screen" id="start-screen">
+    <div class="panel">
+      <div class="pill">Round 1</div>
+      <p class="sub">Tap the cheaper product to survive 5 full rounds</p>
+
+      <div class="logo-triangle">
+        <div class="triangle-logo aldi-node">
+          <img src="./aldi.png" alt="Aldi logo">
+          <div class="triangle-name">Aldi</div>
+        </div>
+
+        <div class="triangle-logo coles-node">
+          <img src="./coles.png" alt="Coles logo">
+          <div class="triangle-name">Coles</div>
+        </div>
+
+        <div class="triangle-center">
+          <img src="./vs.png" alt="Versus">
+        </div>
+
+        <div class="triangle-logo woolworths-node">
+          <img src="./woolworths.png" alt="Woolworths logo">
+          <div class="triangle-name">Woolworths</div>
+        </div>
+      </div>
+
+      <button class="cta" id="play-btn" type="button">Play</button>
+    </div>
+  </section>
+
+  <section class="screen" id="battle-screen">
+    <div class="panel">
+      <div class="top">
+        <div class="chip" id="round-chip">Round 1</div>
+        <div class="chip" id="survived-chip">Survived 0</div>
+      </div>
+
+      <div class="battle-grid">
+        <button class="pick" id="pick-left" type="button">
+          <div class="card" id="battle-left-card">
+            <img id="battle-left-img" src="" alt="">
+            <div class="name" id="battle-left-name"></div>
+            <div class="store" id="battle-left-store"></div>
+            <div class="hint">Tap if cheaper</div>
+          </div>
+        </button>
+
+        <div class="vs-wrap">
+          <img src="./vs.png" alt="Versus" class="vs-image">
+        </div>
+
+        <button class="pick" id="pick-right" type="button">
+          <div class="card" id="battle-right-card">
+            <img id="battle-right-img" src="" alt="">
+            <div class="name" id="battle-right-name"></div>
+            <div class="store" id="battle-right-store"></div>
+            <div class="hint">Tap if cheaper</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="reveal-screen">
+    <div class="panel">
+      <div class="top">
+        <div class="chip" id="reveal-round-chip">Round 1</div>
+        <div class="chip" id="reveal-state-chip">Result</div>
+      </div>
+
+      <div class="reveal-grid">
+        <div class="card" id="reveal-left-card">
+          <img id="reveal-left-img" src="" alt="">
+          <div class="name" id="reveal-left-name"></div>
+          <div class="store" id="reveal-left-store"></div>
+          <div class="price" id="reveal-left-price"></div>
+        </div>
+
+        <div class="card" id="reveal-right-card">
+          <img id="reveal-right-img" src="" alt="">
+          <div class="name" id="reveal-right-name"></div>
+          <div class="store" id="reveal-right-store"></div>
+          <div class="price" id="reveal-right-price"></div>
+        </div>
+      </div>
+
+      <div class="message" id="reveal-message"></div>
+      <button class="cta" id="continue-btn" type="button">Continue</button>
+    </div>
+  </section>
+
+  <section class="screen" id="share-screen">
+    <div class="panel">
+      <div class="pill">Daily result</div>
+      <div style="font-family:'Archivo Black',sans-serif;font-size:1.9rem;margin-top:12px;text-transform:uppercase">
+        You’re out
+      </div>
+
+      <div class="share-box">
+        <div id="share-text" style="font-size:1.05rem;line-height:1.45;font-weight:800;"></div>
+      </div>
+
+      <button class="cta" id="share-btn" type="button">Share result</button>
+      <button class="secondary" id="restart-btn" type="button">Play again</button>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  const rounds = [
+    {
+      left: {
+        name: 'Libra Super Tampons 32 pack',
+        store: 'Coles',
+        price: 9.00,
+        image: './products/Libra Super Tampons 32 pack.png'
+      },
+      right: {
+        name: 'La Gina Extra Virgin Olive Oil 1L',
+        store: 'Woolworths',
+        price: 26.00,
+        image: './products/La Gina Extra Virgin Olive Oil 1L.png'
+      }
+    },
+    {
+      left: {
+        name: 'Choco Pillows 500g',
+        store: 'Aldi',
+        price: 4.69,
+        image: './products/Choco-pillows-500g.png'
+      },
+      right: {
+        name: 'Red Rock Deli Potato Chips 165g',
+        store: 'Woolworths',
+        price: 6.00,
+        image: './products/Red-rock-deli-potato-chips-165g.png'
+      }
+    },
+    {
+      left: {
+        name: 'Urban Eats Pork Dumplings 750g',
+        store: 'Aldi',
+        price: 8.99,
+        image: './products/Urban-eats-pork-dumplings-750g.png'
+      },
+      right: {
+        name: 'Vegemite 560g',
+        store: 'Woolworths',
+        price: 9.90,
+        image: './products/Vegemite-560g.png'
+      }
+    },
+    {
+      left: {
+        name: 'Fresh Tasmanian Salmon Fillets Skin On 4 Pack 460g',
+        store: 'Aldi',
+        price: 15.99,
+        image: './products/Fishmonger Tasmanian Salmon Fillets Skin On 4 Pack 460g.png'
+      },
+      right: {
+        name: 'La Gina Extra Virgin Olive Oil 1L',
+        store: 'Woolworths',
+        price: 26.00,
+        image: './products/La Gina Extra Virgin Olive Oil 1L.png'
+      }
+    },
+    {
+      left: {
+        name: 'Finish Ultimate Dishwashing Tablets 46 Pack',
+        store: 'Aldi',
+        price: 22.99,
+        image: './products/Finish-Ultimate-46-Pack.png'
+      },
+      right: {
+        name: 'Duracell Coppertop AA Alkaline Batteries 16 Pack',
+        store: 'Coles',
+        price: 28.00,
+        image: './products/Duracell Coppertop AA Alkaline Batteries 16 Pack.png'
+      }
+    }
+  ];
+
+  const screens = {
+    splash: document.getElementById('splash-screen'),
+    start: document.getElementById('start-screen'),
+    battle: document.getElementById('battle-screen'),
+    reveal: document.getElementById('reveal-screen'),
+    share: document.getElementById('share-screen')
+  };
+
+  let roundIndex = 0;
+  let survived = 0;
+  let selectedSide = '';
+  let correct = false;
+  let currentPair = null;
+
+  function show(name) {
+    Object.values(screens).forEach(screen => {
+      if (screen) screen.classList.remove('active');
+    });
+    if (screens[name]) screens[name].classList.add('active');
+  }
+
+  function money(value) {
+    return '$' + value.toFixed(2);
+  }
+
+  function setImg(el, src, alt) {
+    if (!el) return;
+    el.src = src;
+    el.alt = alt;
+    el.onerror = function () {
+      this.style.border = '2px solid red';
+      this.title = 'Missing file: ' + src;
+    };
+  }
+
+  function randomizePair(round) {
+    if (Math.random() < 0.5) {
+      return {
+        left: round.left,
+        right: round.right
+      };
+    }
+    return {
+      left: round.right,
+      right: round.left
+    };
+  }
+
+  function renderBattle() {
+    currentPair = randomizePair(rounds[roundIndex]);
+
+    document.getElementById('round-chip').textContent = 'Round ' + (roundIndex + 1);
+    document.getElementById('survived-chip').textContent = 'Survived ' + survived;
+
+    document.getElementById('battle-left-card').className = 'card';
+    document.getElementById('battle-right-card').className = 'card';
+
+    document.getElementById('battle-left-name').textContent = currentPair.left.name;
+    document.getElementById('battle-left-store').textContent = currentPair.left.store;
+    document.getElementById('battle-right-name').textContent = currentPair.right.name;
+    document.getElementById('battle-right-store').textContent = currentPair.right.store;
+
+    setImg(document.getElementById('battle-left-img'), currentPair.left.image, currentPair.left.name);
+    setImg(document.getElementById('battle-right-img'), currentPair.right.image, currentPair.right.name);
+  }
+
+  function renderReveal() {
+    const cheap = currentPair.left.price <= currentPair.right.price ? 'left' : 'right';
+
+    document.getElementById('reveal-round-chip').textContent = 'Round ' + (roundIndex + 1);
+    document.getElementById('reveal-state-chip').textContent = correct ? 'Correct' : 'Incorrect';
+
+    ['reveal-left-card', 'reveal-right-card'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.className = 'card';
+    });
+
+    if (selectedSide === 'left') document.getElementById('reveal-left-card').classList.add('selected');
+    if (selectedSide === 'right') document.getElementById('reveal-right-card').classList.add('selected');
+
+    if (cheap === 'left') document.getElementById('reveal-left-card').classList.add('cheapest');
+    if (cheap === 'right') document.getElementById('reveal-right-card').classList.add('cheapest');
+
+    if (!correct && selectedSide === 'left') document.getElementById('reveal-left-card').classList.add('wrong');
+    if (!correct && selectedSide === 'right') document.getElementById('reveal-right-card').classList.add('wrong');
+
+    document.getElementById('reveal-left-name').textContent = currentPair.left.name;
+    document.getElementById('reveal-left-store').textContent = currentPair.left.store;
+    document.getElementById('reveal-left-price').textContent = money(currentPair.left.price);
+
+    document.getElementById('reveal-right-name').textContent = currentPair.right.name;
+    document.getElementById('reveal-right-store').textContent = currentPair.right.store;
+    document.getElementById('reveal-right-price').textContent = money(currentPair.right.price);
+
+    setImg(document.getElementById('reveal-left-img'), currentPair.left.image, currentPair.left.name);
+    setImg(document.getElementById('reveal-right-img'), currentPair.right.image, currentPair.right.name);
+
+    const messageEl = document.getElementById('reveal-message');
+    messageEl.textContent = correct
+      ? 'Correct. You survive this round.'
+      : 'Bugger. You stuffed this one. Play again tomorrow. Cmon, you know you want to! 😎';
+    messageEl.className = 'message ' + (correct ? 'good' : 'bad');
+
+    document.getElementById('continue-btn').textContent =
+      correct && roundIndex < rounds.length - 1 ? 'Go to round ' + (roundIndex + 2) : 'See result';
+  }
+
+  function buildShareText(roundsSurvived) {
+    const totalRounds = 5;
+    let squares = '';
+
+    if (roundsSurvived === 0) {
+      squares = '🟥⬛⬛⬛⬛';
+    } else if (roundsSurvived >= totalRounds) {
+      squares = '🟩🟩🟩🟩🟩';
+    } else {
+      const greens = '🟩'.repeat(roundsSurvived);
+      const red = '🟥';
+      const blanks = '⬛'.repeat(totalRounds - roundsSurvived - 1);
+      squares = greens + red + blanks;
+    }
+
+    const header = `1 May · Docket Duel · Rounds: ${squares}`;
+
+    let joke = '';
+    if (roundsSurvived === 0) {
+      joke = "Hey buddy, nice try stepping into the ring. Don't beat yourself up about a 1st round KO 🙂";
+    } else if (roundsSurvived === 1) {
+      joke = "Well, at least you handled a few punches. Get back in the ring soon! 👍";
+    } else if (roundsSurvived === 2) {
+      joke = "You landed some nice punches. Good job! 🥊";
+    } else if (roundsSurvived === 3) {
+      joke = "You can dance in the ring! Kudos bro! 😎";
+    } else if (roundsSurvived >= 4) {
+      joke = "Dance like a butterfly, sting like a bee. You are a champion! 👑";
+    }
+
+    return `${header}\n\n${joke}`;
+  }
+
+  function pick(side) {
+    selectedSide = side;
+
+    const chosen = side === 'left' ? currentPair.left : currentPair.right;
+    const other = side === 'left' ? currentPair.right : currentPair.left;
+
+    correct = chosen.price <= other.price;
+
+    if (correct) survived += 1;
+
+    renderReveal();
+    show('reveal');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const splashPlayBtn = document.getElementById('splash-play-btn');
+    const playBtn = document.getElementById('play-btn');
+    const pickLeft = document.getElementById('pick-left');
+    const pickRight = document.getElementById('pick-right');
+    const continueBtn = document.getElementById('continue-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const shareBtn = document.getElementById('share-btn');
+
+    if (splashPlayBtn) {
+      splashPlayBtn.addEventListener('click', () => {
+        show('start');
+      });
+    }
+
+    if (playBtn) {
+      playBtn.addEventListener('click', () => {
+        roundIndex = 0;
+        survived = 0;
+        selectedSide = '';
+        correct = false;
+        renderBattle();
+        show('battle');
+      });
+    }
+
+    if (pickLeft) pickLeft.addEventListener('click', () => pick('left'));
+    if (pickRight) pickRight.addEventListener('click', () => pick('right'));
+
+    if (continueBtn) {
+      continueBtn.addEventListener('click', () => {
+        if (!correct || roundIndex === rounds.length - 1) {
+          document.getElementById('share-text').textContent = buildShareText(survived);
+          show('share');
+          return;
+        }
+
+        roundIndex += 1;
+        renderBattle();
+        show('battle');
+      });
+    }
+
+    if (restartBtn) {
+      restartBtn.addEventListener('click', () => {
+        show('splash');
+      });
+    }
+
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        const text = document.getElementById('share-text').textContent;
+
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: 'Docket Duel', text });
+            return;
+          } catch (err) {}
+        }
+
+        try {
+          await navigator.clipboard.writeText(text);
+          alert('Result copied to clipboard');
+        } catch (err) {
+          alert(text);
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
