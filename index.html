@@ -121,14 +121,14 @@
 
     .reveal-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 12px;
       margin-top: 16px;
     }
 
-    .battle-grid {
+    .battle-stack {
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
       align-items: center;
       margin-top: 16px;
@@ -138,11 +138,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 2px 0;
     }
 
     .vs-image {
-      width: 64px;
-      height: 64px;
+      width: 74px;
+      height: 74px;
       object-fit: contain;
       display: block;
       filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
@@ -151,26 +152,27 @@
     .logo-triangle {
       position: relative;
       width: 100%;
-      height: 320px;
+      height: 340px;
       margin-top: 20px;
     }
 
     .triangle-center {
       position: absolute;
-      top: 50%;
+      top: 56%;
       left: 50%;
-      width: 82px;
-      height: 82px;
+      width: 90px;
+      height: 90px;
       transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 3;
+      z-index: 5;
+      pointer-events: none;
     }
 
     .triangle-center img {
-      width: 72px;
-      height: 72px;
+      width: 84px;
+      height: 84px;
       object-fit: contain;
       filter: drop-shadow(0 8px 16px rgba(0,0,0,.28));
     }
@@ -231,7 +233,7 @@
       box-shadow: 0 12px 30px rgba(0,0,0,.18);
     }
 
-    .card img {
+    .card img.product-image {
       width: 100%;
       height: 180px;
       object-fit: contain;
@@ -319,52 +321,59 @@
 
     .wrong {
       outline: 4px solid rgba(255,92,116,.95);
-      opacity: .52;
-      filter: grayscale(.35);
+      opacity: .70;
+      filter: grayscale(.15);
+    }
+
+    .price-row {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .price {
-      margin-top: 12px;
-      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 56px;
+      min-height: 52px;
       padding: 10px 18px;
       border-radius: 999px;
       font-size: 1.8rem;
       line-height: 1;
       font-weight: 900;
+    }
+
+    .price-cheap {
+      color: #ffffff;
+      background: #d1002a;
+      box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.35),
+        0 0 0 2px rgba(255, 255, 255, 0.15);
+      transform: rotate(-1deg);
+    }
+
+    .price-expensive {
       color: #121212;
       background: radial-gradient(circle at top, #fff3a6 0%, #ffd84d 35%, #ffb703 70%, #ff8c00 100%);
-      box-shadow: 0 16px 32px rgba(255,183,3,.40), inset 0 2px 0 rgba(255,255,255,.45), inset 0 -2px 0 rgba(0,0,0,.10);
-      transform: rotate(-1deg);
-      text-shadow: 0 1px 0 rgba(255,255,255,.25);
+      box-shadow:
+        0 12px 28px rgba(255,183,3,.30),
+        inset 0 2px 0 rgba(255,255,255,.45),
+        inset 0 -2px 0 rgba(0,0,0,.10);
+      transform: rotate(1deg);
     }
 
-    .price::before {
-      content: "";
-      position: absolute;
-      inset: -4px;
-      border-radius: 999px;
-      border: 2px dashed rgba(255,255,255,.35);
-      pointer-events: none;
+    .result-icon {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      display: none;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,.25));
     }
 
-    .price::after {
-      content: "KO PRICE";
-      position: absolute;
-      top: -14px;
-      right: -6px;
-      font-size: .62rem;
-      font-weight: 900;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      padding: 4px 8px;
-      border-radius: 999px;
-      color: #ffd84d;
-      background: #111111;
-      box-shadow: 0 8px 18px rgba(0,0,0,.25);
+    .result-icon.show {
+      display: block;
     }
 
     .share-box {
@@ -377,12 +386,12 @@
     }
 
     @media (max-width: 390px) {
-      .card img { height: 160px; }
+      .card img.product-image { height: 160px; }
       .price { font-size: 1.55rem; min-height: 50px; }
-      .vs-image { width: 54px; height: 54px; }
+      .vs-image { width: 62px; height: 62px; }
 
       .logo-triangle {
-        height: 290px;
+        height: 305px;
       }
 
       .triangle-logo {
@@ -397,13 +406,19 @@
       }
 
       .triangle-center {
-        width: 72px;
-        height: 72px;
+        width: 76px;
+        height: 76px;
+        top: 55%;
       }
 
       .triangle-center img {
-        width: 62px;
-        height: 62px;
+        width: 70px;
+        height: 70px;
+      }
+
+      .result-icon {
+        width: 30px;
+        height: 30px;
       }
     }
   </style>
@@ -457,12 +472,12 @@
         <div class="chip" id="survived-chip">Survived 0</div>
       </div>
 
-      <div class="battle-grid">
-        <button class="pick" id="pick-left" type="button">
-          <div class="card" id="battle-left-card">
-            <img id="battle-left-img" src="" alt="">
-            <div class="name" id="battle-left-name"></div>
-            <div class="store" id="battle-left-store"></div>
+      <div class="battle-stack">
+        <button class="pick" id="pick-top" type="button">
+          <div class="card" id="battle-top-card">
+            <img class="product-image" id="battle-top-img" src="" alt="">
+            <div class="name" id="battle-top-name"></div>
+            <div class="store" id="battle-top-store"></div>
             <div class="hint">Tap if cheaper</div>
           </div>
         </button>
@@ -471,11 +486,11 @@
           <img src="./vs.png" alt="Versus" class="vs-image">
         </div>
 
-        <button class="pick" id="pick-right" type="button">
-          <div class="card" id="battle-right-card">
-            <img id="battle-right-img" src="" alt="">
-            <div class="name" id="battle-right-name"></div>
-            <div class="store" id="battle-right-store"></div>
+        <button class="pick" id="pick-bottom" type="button">
+          <div class="card" id="battle-bottom-card">
+            <img class="product-image" id="battle-bottom-img" src="" alt="">
+            <div class="name" id="battle-bottom-name"></div>
+            <div class="store" id="battle-bottom-store"></div>
             <div class="hint">Tap if cheaper</div>
           </div>
         </button>
@@ -491,18 +506,28 @@
       </div>
 
       <div class="reveal-grid">
-        <div class="card" id="reveal-left-card">
-          <img id="reveal-left-img" src="" alt="">
-          <div class="name" id="reveal-left-name"></div>
-          <div class="store" id="reveal-left-store"></div>
-          <div class="price" id="reveal-left-price"></div>
+        <div class="card" id="reveal-top-card">
+          <img class="product-image" id="reveal-top-img" src="" alt="">
+          <div class="name" id="reveal-top-name"></div>
+          <div class="store" id="reveal-top-store"></div>
+          <div class="price-row">
+            <div class="price" id="reveal-top-price"></div>
+            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-top-icon">
+          </div>
         </div>
 
-        <div class="card" id="reveal-right-card">
-          <img id="reveal-right-img" src="" alt="">
-          <div class="name" id="reveal-right-name"></div>
-          <div class="store" id="reveal-right-store"></div>
-          <div class="price" id="reveal-right-price"></div>
+        <div class="vs-wrap">
+          <img src="./vs.png" alt="Versus" class="vs-image">
+        </div>
+
+        <div class="card" id="reveal-bottom-card">
+          <img class="product-image" id="reveal-bottom-img" src="" alt="">
+          <div class="name" id="reveal-bottom-name"></div>
+          <div class="store" id="reveal-bottom-store"></div>
+          <div class="price-row">
+            <div class="price" id="reveal-bottom-price"></div>
+            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-bottom-icon">
+          </div>
         </div>
       </div>
 
@@ -641,13 +666,13 @@
   function randomizePair(round) {
     if (Math.random() < 0.5) {
       return {
-        left: round.left,
-        right: round.right
+        top: round.left,
+        bottom: round.right
       };
     }
     return {
-      left: round.right,
-      right: round.left
+      top: round.right,
+      bottom: round.left
     };
   }
 
@@ -657,48 +682,83 @@
     document.getElementById('round-chip').textContent = 'Round ' + (roundIndex + 1);
     document.getElementById('survived-chip').textContent = 'Survived ' + survived;
 
-    document.getElementById('battle-left-card').className = 'card';
-    document.getElementById('battle-right-card').className = 'card';
+    document.getElementById('battle-top-card').className = 'card';
+    document.getElementById('battle-bottom-card').className = 'card';
 
-    document.getElementById('battle-left-name').textContent = currentPair.left.name;
-    document.getElementById('battle-left-store').textContent = currentPair.left.store;
-    document.getElementById('battle-right-name').textContent = currentPair.right.name;
-    document.getElementById('battle-right-store').textContent = currentPair.right.store;
+    document.getElementById('battle-top-name').textContent = currentPair.top.name;
+    document.getElementById('battle-top-store').textContent = currentPair.top.store;
+    document.getElementById('battle-bottom-name').textContent = currentPair.bottom.name;
+    document.getElementById('battle-bottom-store').textContent = currentPair.bottom.store;
 
-    setImg(document.getElementById('battle-left-img'), currentPair.left.image, currentPair.left.name);
-    setImg(document.getElementById('battle-right-img'), currentPair.right.image, currentPair.right.name);
+    setImg(document.getElementById('battle-top-img'), currentPair.top.image, currentPair.top.name);
+    setImg(document.getElementById('battle-bottom-img'), currentPair.bottom.image, currentPair.bottom.name);
   }
 
   function renderReveal() {
-    const cheap = currentPair.left.price <= currentPair.right.price ? 'left' : 'right';
+    const cheap = currentPair.top.price <= currentPair.bottom.price ? 'top' : 'bottom';
 
     document.getElementById('reveal-round-chip').textContent = 'Round ' + (roundIndex + 1);
     document.getElementById('reveal-state-chip').textContent = correct ? 'Correct' : 'Incorrect';
 
-    ['reveal-left-card', 'reveal-right-card'].forEach(id => {
+    ['reveal-top-card', 'reveal-bottom-card'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.className = 'card';
     });
 
-    if (selectedSide === 'left') document.getElementById('reveal-left-card').classList.add('selected');
-    if (selectedSide === 'right') document.getElementById('reveal-right-card').classList.add('selected');
+    const topPriceEl = document.getElementById('reveal-top-price');
+    const bottomPriceEl = document.getElementById('reveal-bottom-price');
+    const topIconEl = document.getElementById('reveal-top-icon');
+    const bottomIconEl = document.getElementById('reveal-bottom-icon');
 
-    if (cheap === 'left') document.getElementById('reveal-left-card').classList.add('cheapest');
-    if (cheap === 'right') document.getElementById('reveal-right-card').classList.add('cheapest');
+    topPriceEl.className = 'price';
+    bottomPriceEl.className = 'price';
+    topIconEl.className = 'result-icon';
+    bottomIconEl.className = 'result-icon';
 
-    if (!correct && selectedSide === 'left') document.getElementById('reveal-left-card').classList.add('wrong');
-    if (!correct && selectedSide === 'right') document.getElementById('reveal-right-card').classList.add('wrong');
+    topIconEl.src = './tick.png';
+    bottomIconEl.src = './tick.png';
+    topIconEl.alt = 'Correct';
+    bottomIconEl.alt = 'Correct';
 
-    document.getElementById('reveal-left-name').textContent = currentPair.left.name;
-    document.getElementById('reveal-left-store').textContent = currentPair.left.store;
-    document.getElementById('reveal-left-price').textContent = money(currentPair.left.price);
+    if (selectedSide === 'top') document.getElementById('reveal-top-card').classList.add('selected');
+    if (selectedSide === 'bottom') document.getElementById('reveal-bottom-card').classList.add('selected');
 
-    document.getElementById('reveal-right-name').textContent = currentPair.right.name;
-    document.getElementById('reveal-right-store').textContent = currentPair.right.store;
-    document.getElementById('reveal-right-price').textContent = money(currentPair.right.price);
+    if (cheap === 'top') {
+      document.getElementById('reveal-top-card').classList.add('cheapest');
+      topPriceEl.classList.add('price-cheap');
+      bottomPriceEl.classList.add('price-expensive');
+      topIconEl.classList.add('show');
+    } else {
+      document.getElementById('reveal-bottom-card').classList.add('cheapest');
+      bottomPriceEl.classList.add('price-cheap');
+      topPriceEl.classList.add('price-expensive');
+      bottomIconEl.classList.add('show');
+    }
 
-    setImg(document.getElementById('reveal-left-img'), currentPair.left.image, currentPair.left.name);
-    setImg(document.getElementById('reveal-right-img'), currentPair.right.image, currentPair.right.name);
+    if (!correct && selectedSide === 'top') {
+      document.getElementById('reveal-top-card').classList.add('wrong');
+      topIconEl.src = './cross.png';
+      topIconEl.alt = 'Wrong';
+      topIconEl.classList.add('show');
+    }
+
+    if (!correct && selectedSide === 'bottom') {
+      document.getElementById('reveal-bottom-card').classList.add('wrong');
+      bottomIconEl.src = './cross.png';
+      bottomIconEl.alt = 'Wrong';
+      bottomIconEl.classList.add('show');
+    }
+
+    document.getElementById('reveal-top-name').textContent = currentPair.top.name;
+    document.getElementById('reveal-top-store').textContent = currentPair.top.store;
+    topPriceEl.textContent = money(currentPair.top.price);
+
+    document.getElementById('reveal-bottom-name').textContent = currentPair.bottom.name;
+    document.getElementById('reveal-bottom-store').textContent = currentPair.bottom.store;
+    bottomPriceEl.textContent = money(currentPair.bottom.price);
+
+    setImg(document.getElementById('reveal-top-img'), currentPair.top.image, currentPair.top.name);
+    setImg(document.getElementById('reveal-bottom-img'), currentPair.bottom.image, currentPair.bottom.name);
 
     const messageEl = document.getElementById('reveal-message');
     messageEl.textContent = correct
@@ -746,8 +806,8 @@
   function pick(side) {
     selectedSide = side;
 
-    const chosen = side === 'left' ? currentPair.left : currentPair.right;
-    const other = side === 'left' ? currentPair.right : currentPair.left;
+    const chosen = side === 'top' ? currentPair.top : currentPair.bottom;
+    const other = side === 'top' ? currentPair.bottom : currentPair.top;
 
     correct = chosen.price <= other.price;
 
@@ -760,8 +820,8 @@
   window.addEventListener('DOMContentLoaded', () => {
     const splashPlayBtn = document.getElementById('splash-play-btn');
     const playBtn = document.getElementById('play-btn');
-    const pickLeft = document.getElementById('pick-left');
-    const pickRight = document.getElementById('pick-right');
+    const pickTop = document.getElementById('pick-top');
+    const pickBottom = document.getElementById('pick-bottom');
     const continueBtn = document.getElementById('continue-btn');
     const restartBtn = document.getElementById('restart-btn');
     const shareBtn = document.getElementById('share-btn');
@@ -783,8 +843,8 @@
       });
     }
 
-    if (pickLeft) pickLeft.addEventListener('click', () => pick('left'));
-    if (pickRight) pickRight.addEventListener('click', () => pick('right'));
+    if (pickTop) pickTop.addEventListener('click', () => pick('top'));
+    if (pickBottom) pickBottom.addEventListener('click', () => pick('bottom'));
 
     if (continueBtn) {
       continueBtn.addEventListener('click', () => {
