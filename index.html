@@ -88,11 +88,13 @@
 
     .sub {
       text-align: center;
-      color: var(--muted);
-      line-height: 1.35;
-      font-size: 1rem;
-      max-width: 22ch;
-      margin: 18px auto 0;
+      color: #ffffff;
+      line-height: 1.2;
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: .01em;
+      max-width: 20ch;
+      margin: 20px auto 0;
     }
 
     .splash-logo {
@@ -102,21 +104,14 @@
       box-shadow: 0 18px 48px rgba(0,0,0,.45);
     }
 
-    .splash-title {
-      font-family: 'Archivo Black', sans-serif;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-      font-size: 2rem;
-      line-height: 1;
-      margin-top: 8px;
-    }
-
     .splash-sub {
       text-align: center;
       color: var(--muted);
       margin-top: 8px;
-      font-size: .96rem;
+      font-size: 1.08rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
     }
 
     .reveal-grid {
@@ -158,10 +153,10 @@
 
     .triangle-center {
       position: absolute;
-      top: 56%;
+      top: 48%;
       left: 50%;
-      width: 90px;
-      height: 90px;
+      width: 92px;
+      height: 92px;
       transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
@@ -171,8 +166,8 @@
     }
 
     .triangle-center img {
-      width: 84px;
-      height: 84px;
+      width: 86px;
+      height: 86px;
       object-fit: contain;
       filter: drop-shadow(0 8px 16px rgba(0,0,0,.28));
     }
@@ -260,12 +255,16 @@
     }
 
     .hint {
-      margin-top: 8px;
-      font-size: .82rem;
+      margin-top: 10px;
+      font-size: .98rem;
       font-weight: 900;
-      color: #8a8f99;
       text-transform: uppercase;
-      letter-spacing: .08em;
+      letter-spacing: .02em;
+      text-align: center;
+    }
+
+    .battle-hint {
+      color: #d1002a;
     }
 
     .pick {
@@ -406,14 +405,19 @@
       }
 
       .triangle-center {
-        width: 76px;
-        height: 76px;
-        top: 55%;
+        width: 78px;
+        height: 78px;
+        top: 47%;
       }
 
       .triangle-center img {
-        width: 70px;
-        height: 70px;
+        width: 72px;
+        height: 72px;
+      }
+
+      .sub {
+        font-size: 1.2rem;
+        max-width: 18ch;
       }
 
       .result-icon {
@@ -429,8 +433,7 @@
   <section class="screen active" id="splash-screen">
     <div class="panel">
       <img src="./docketduel.jpg" alt="Docket Duel" class="splash-logo" onerror="this.style.display='none'">
-      <div class="splash-title">Docket Duel</div>
-      <p class="splash-sub">Tap play to enter the ring.</p>
+      <p class="splash-sub">ENTER THE RING</p>
       <button class="cta" id="splash-play-btn" type="button">Play</button>
     </div>
   </section>
@@ -438,7 +441,7 @@
   <section class="screen" id="start-screen">
     <div class="panel">
       <div class="pill">Round 1</div>
-      <p class="sub">Tap the cheaper product to survive 5 full rounds</p>
+      <p class="sub">5 Rounds. 10 Products.</p>
 
       <div class="logo-triangle">
         <div class="triangle-logo aldi-node">
@@ -477,8 +480,7 @@
           <div class="card" id="battle-top-card">
             <img class="product-image" id="battle-top-img" src="" alt="">
             <div class="name" id="battle-top-name"></div>
-            <div class="store" id="battle-top-store"></div>
-            <div class="hint">Tap if cheaper</div>
+            <div class="hint battle-hint">TAP the cheaper product</div>
           </div>
         </button>
 
@@ -490,8 +492,7 @@
           <div class="card" id="battle-bottom-card">
             <img class="product-image" id="battle-bottom-img" src="" alt="">
             <div class="name" id="battle-bottom-name"></div>
-            <div class="store" id="battle-bottom-store"></div>
-            <div class="hint">Tap if cheaper</div>
+            <div class="hint battle-hint">TAP the cheaper product</div>
           </div>
         </button>
       </div>
@@ -512,7 +513,7 @@
           <div class="store" id="reveal-top-store"></div>
           <div class="price-row">
             <div class="price" id="reveal-top-price"></div>
-            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-top-icon">
+            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-top-icon" onerror="this.style.display='none'; this.title='Missing tick/cross file';">
           </div>
         </div>
 
@@ -526,7 +527,7 @@
           <div class="store" id="reveal-bottom-store"></div>
           <div class="price-row">
             <div class="price" id="reveal-bottom-price"></div>
-            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-bottom-icon">
+            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-bottom-icon" onerror="this.style.display='none'; this.title='Missing tick/cross file';">
           </div>
         </div>
       </div>
@@ -555,6 +556,9 @@
 </main>
 
 <script>
+  const TICK_SRC = './tick.png';
+  const CROSS_SRC = './cross.png';
+
   const rounds = [
     {
       left: {
@@ -663,6 +667,17 @@
     };
   }
 
+  function setResultIcon(el, src, alt) {
+    if (!el) return;
+    el.src = src;
+    el.alt = alt;
+    el.classList.add('show');
+    el.onerror = function () {
+      this.style.display = 'none';
+      this.title = 'Missing file: ' + src;
+    };
+  }
+
   function randomizePair(round) {
     if (Math.random() < 0.5) {
       return {
@@ -686,9 +701,7 @@
     document.getElementById('battle-bottom-card').className = 'card';
 
     document.getElementById('battle-top-name').textContent = currentPair.top.name;
-    document.getElementById('battle-top-store').textContent = currentPair.top.store;
     document.getElementById('battle-bottom-name').textContent = currentPair.bottom.name;
-    document.getElementById('battle-bottom-store').textContent = currentPair.bottom.store;
 
     setImg(document.getElementById('battle-top-img'), currentPair.top.image, currentPair.top.name);
     setImg(document.getElementById('battle-bottom-img'), currentPair.bottom.image, currentPair.bottom.name);
@@ -715,11 +728,6 @@
     topIconEl.className = 'result-icon';
     bottomIconEl.className = 'result-icon';
 
-    topIconEl.src = './tick.png';
-    bottomIconEl.src = './tick.png';
-    topIconEl.alt = 'Correct';
-    bottomIconEl.alt = 'Correct';
-
     if (selectedSide === 'top') document.getElementById('reveal-top-card').classList.add('selected');
     if (selectedSide === 'bottom') document.getElementById('reveal-bottom-card').classList.add('selected');
 
@@ -727,26 +735,22 @@
       document.getElementById('reveal-top-card').classList.add('cheapest');
       topPriceEl.classList.add('price-cheap');
       bottomPriceEl.classList.add('price-expensive');
-      topIconEl.classList.add('show');
+      setResultIcon(topIconEl, TICK_SRC, 'Correct');
     } else {
       document.getElementById('reveal-bottom-card').classList.add('cheapest');
       bottomPriceEl.classList.add('price-cheap');
       topPriceEl.classList.add('price-expensive');
-      bottomIconEl.classList.add('show');
+      setResultIcon(bottomIconEl, TICK_SRC, 'Correct');
     }
 
     if (!correct && selectedSide === 'top') {
       document.getElementById('reveal-top-card').classList.add('wrong');
-      topIconEl.src = './cross.png';
-      topIconEl.alt = 'Wrong';
-      topIconEl.classList.add('show');
+      setResultIcon(topIconEl, CROSS_SRC, 'Wrong');
     }
 
     if (!correct && selectedSide === 'bottom') {
       document.getElementById('reveal-bottom-card').classList.add('wrong');
-      bottomIconEl.src = './cross.png';
-      bottomIconEl.alt = 'Wrong';
-      bottomIconEl.classList.add('show');
+      setResultIcon(bottomIconEl, CROSS_SRC, 'Wrong');
     }
 
     document.getElementById('reveal-top-name').textContent = currentPair.top.name;
@@ -785,7 +789,7 @@
       squares = greens + red + blanks;
     }
 
-    const header = `1 May · Docket Duel · Rounds: ${squares}`;
+    const header = `2 May · Docket Duel · Rounds: ${squares}`;
 
     let joke = '';
     if (roundsSurvived === 0) {
