@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
-  <title>Docket Duel</title>
+  <title>PRICEDUX</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -436,7 +436,7 @@
 
   <section class="screen active" id="splash-screen">
     <div class="panel">
-      <img src="./docketduel.png" alt="Docket Duel" class="splash-logo" onerror="this.style.display='none'">
+      <img src="./docketduel.png" alt="PRICEDUX" class="splash-logo" onerror="this.style.display='none'">
       <p class="splash-sub">TEST YOUR PRICE IQ</p>
       <button class="cta" id="splash-play-btn" type="button">Play</button>
     </div>
@@ -796,7 +796,7 @@ if (correct) {
       squares = greens + red + blanks;
     }
 
-    const header = `2 May · Docket Duel · Rounds: ${squares}`;
+    const header = `2 May · PRICEDUX · Rounds: ${squares}`;
 
     let joke = '';
     if (roundsSurvived === 0) {
@@ -811,7 +811,7 @@ if (correct) {
       joke = "My god, you're the friggin Albert F Einstein of the supermarket! 👑";
     }
 
-    return `${header}\n\n${joke}`;
+    return `${header}\n\n${joke}\n\nPlay PRICEDUX:\nhttps://your-game-url-here.com`;
   }
 
   function pick(side) {
@@ -883,7 +883,7 @@ if (correct) {
 
         if (navigator.share) {
           try {
-            await navigator.share({ title: 'Docket Duel', text });
+            await navigator.share({ title: 'PRICEDUX', text, url: 'https://your-game-url-here.com' });
             return;
           } catch (err) {}
         }
