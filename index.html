@@ -444,8 +444,8 @@
 
   <section class="screen" id="start-screen">
     <div class="panel">
-      <div class="pill">Round 1</div>
-      <p class="sub">5 Rounds. 10 Products.</p>
+      <div class="pill">20 Rounds</div>
+      <p class="sub">20 Rounds. 26 Products.</p>
 
       <div class="logo-triangle">
         <div class="triangle-logo aldi-node">
@@ -517,7 +517,7 @@
           <div class="store" id="reveal-top-store"></div>
           <div class="price-row">
             <div class="price" id="reveal-top-price"></div>
-            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-top-icon" onerror="this.style.display='none'; this.title='Missing tick/cross file';">
+            <img src="./tick.png" alt="Result" class="result-icon" id="reveal-top-icon" onerror="this.style.display='none'; this.title='Missing tick/cross file';">
           </div>
         </div>
 
@@ -531,7 +531,7 @@
           <div class="store" id="reveal-bottom-store"></div>
           <div class="price-row">
             <div class="price" id="reveal-bottom-price"></div>
-            <img src="./tick.png" alt="Correct" class="result-icon" id="reveal-bottom-icon" onerror="this.style.display='none'; this.title='Missing tick/cross file';">
+            <img src="./tick.png" alt="Result" class="result-icon" id="reveal-bottom-icon" onerror="this.style.display='none'; this.title='Missing tick/cross file';">
           </div>
         </div>
       </div>
@@ -545,7 +545,7 @@
     <div class="panel">
       <div class="pill">Daily result</div>
       <div style="font-family:'Archivo Black',sans-serif;font-size:1.9rem;margin-top:12px;text-transform:uppercase">
-        You’re out
+        PRICEDUX
       </div>
 
       <div class="share-box">
@@ -562,78 +562,36 @@
 <script>
   const TICK_SRC = './tick.png';
   const CROSS_SRC = './cross.png';
+  const SHARE_URL = 'https://docketduel.onrender.com';
+  const TOTAL_ROUNDS = 20;
 
-  const rounds = [
-    {
-      left: {
-        name: 'Libra Super Tampons 32 pack',
-        store: 'Coles',
-        price: 9.00,
-        image: './products/Libra Super Tampons 32 pack.png'
-      },
-      right: {
-        name: 'La Gina Extra Virgin Olive Oil 1L',
-        store: 'Woolworths',
-        price: 26.00,
-        image: './products/La Gina Extra Virgin Olive Oil 1L.png'
-      }
-    },
-    {
-      left: {
-        name: 'Choco Pillows 500g',
-        store: 'Aldi',
-        price: 4.69,
-        image: './products/Choco-pillows-500g.png'
-      },
-      right: {
-        name: 'Red Rock Deli Potato Chips 165g',
-        store: 'Woolworths',
-        price: 6.00,
-        image: './products/Red-rock-deli-potato-chips-165g.png'
-      }
-    },
-    {
-      left: {
-        name: 'Urban Eats Pork Dumplings 750g',
-        store: 'Aldi',
-        price: 8.99,
-        image: './products/Urban-eats-pork-dumplings-750g.png'
-      },
-      right: {
-        name: 'Vegemite 560g',
-        store: 'Woolworths',
-        price: 9.90,
-        image: './products/Vegemite-560g.png'
-      }
-    },
-    {
-      left: {
-        name: 'Fresh Tasmanian Salmon Fillets Skin On 4 Pack 460g',
-        store: 'Aldi',
-        price: 15.99,
-        image: './products/Fishmonger Tasmanian Salmon Fillets Skin On 4 Pack 460g.png'
-      },
-      right: {
-        name: 'La Gina Extra Virgin Olive Oil 1L',
-        store: 'Woolworths',
-        price: 26.00,
-        image: './products/La Gina Extra Virgin Olive Oil 1L.png'
-      }
-    },
-    {
-      left: {
-        name: 'Finish Ultimate Dishwashing Tablets 46 Pack',
-        store: 'Aldi',
-        price: 22.99,
-        image: './products/Finish-Ultimate-46-Pack.png'
-      },
-      right: {
-        name: 'Duracell Coppertop AA Alkaline Batteries 16 Pack',
-        store: 'Coles',
-        price: 28.00,
-        image: './products/Duracell Coppertop AA Alkaline Batteries 16 Pack.png'
-      }
-    }
+  const products = [
+    { name: 'La Gina Extra Virgin Olive Oil 1L', store: 'Woolworths', price: 26.00, image: './assets/products/La Gina Extra Virgin Olive Oil 1L.png' },
+    { name: 'Trimat Advanced Laundry Powder 5kg', store: 'Aldi', price: 24.99, image: './assets/products/Trimat Advanced Laundry Powder 5kg.png' },
+    { name: 'Fresh Tasmanian Salmon Fillets Skin On 4 Pack 460g', store: 'Aldi', price: 15.99, image: './assets/products/Fishmonger Tasmanian Salmon Fillets Skin On 4 Pack 460g.png' },
+    { name: 'Raid Max Pest Multi Insect Killer Spring Meadow 300g', store: 'Coles', price: 13.00, image: './assets/products/Raid Max Pest Multi Insect Killer Spring Meadow 300g.png' },
+    { name: 'Byron Bay Chilli Co. Jalapeno Sauce 250g', store: 'Woolworths', price: 5.00, image: './assets/products/Byron Bay Chilli Co. Jalapeno Sauce 250g.png' },
+    { name: 'Libra Super Tampons 32 pack', store: 'Coles', price: 9.00, image: './assets/products/Libra Super Tampons 32 pack.png' },
+    { name: 'Duracell Coppertop AA Alkaline Batteries 16 Pack', store: 'Coles', price: 28.00, image: './assets/products/Duracell Coppertop AA Alkaline Batteries 16 Pack.png' },
+    { name: 'Vegemite 560g', store: 'Woolworths', price: 9.90, image: './assets/products/Vegemite-560g.png' },
+    { name: 'Urban Eats Pork Dumplings 750g', store: 'Aldi', price: 8.99, image: './assets/products/Urban-eats-pork-dumplings-750g.png' },
+    { name: 'Grand Padano 250g', store: 'Aldi', price: 8.29, image: './assets/products/Grand-padano-250g.png' },
+    { name: 'A2 Full Cream Milk 2L', store: 'Coles', price: 6.90, image: './assets/products/a2-full-cream-milk-2l.png' },
+    { name: 'Red Rock Deli Potato Chips 165g', store: 'Woolworths', price: 6.00, image: './assets/products/Red-rock-deli-potato-chips-165g.png' },
+    { name: 'Choco Pillows 500g', store: 'Aldi', price: 4.69, image: './assets/products/Choco-pillows-500g.png' },
+    { name: 'Cadbury Chomp bar 30g', store: 'Coles', price: 1.00, image: './assets/products/Cadbury-chomp-bar-30g.png' },
+    { name: 'Hydale Beef Jerky Original 50g', store: 'Aldi', price: 3.99, image: './assets/products/Hydale Beef Jerky Original 50g.png' },
+    { name: 'Nivea Deo Aero Female Pearl And Beauty 250mL', store: 'Coles', price: 10.50, image: './assets/products/Nivea Deo Aero Female Pearl And Beauty 250mL.png' },
+    { name: 'Nescafe Gold Original Soluble Instant Coffee Jar 100g', store: 'Woolworths', price: 14.50, image: './assets/products/Nescafe Gold Original Soluble Instant Coffee Jar 100g.png' },
+    { name: 'Durex Original Regular Fit Condoms 30 pack', store: 'Woolworths', price: 17.50, image: './assets/products/Durex Original Regular Fit Condoms 30 pack.png' },
+    { name: 'Peters Maxibon Original Vanilla 4 Pack 560mL', store: 'Coles', price: 11.50, image: './assets/products/Peters Maxibon Original Vanilla 4 Pack 560mL.png' },
+    { name: 'Old El Paso Quesadilla Kit 365g', store: 'Coles', price: 8.50, image: './assets/products/Old El Paso Quesadilla Kit 365g.png' },
+    { name: 'Westacre Dairy Cottage Cheese 500g', store: 'Aldi', price: 5.49, image: './assets/products/Westacre Dairy Cottage Cheese 500g.png' },
+    { name: 'International Cuisine Beef Lasagne 2kg', store: 'Aldi', price: 11.49, image: './assets/products/International Cuisine Beef Lasagne 2kg.png' },
+    { name: 'Milfina Jelli Pop 6 Pack 450ml', store: 'Aldi', price: 4.99, image: './assets/products/Milfina Jelli Pop 6 Pack 450ml.png' },
+    { name: 'Specially Selected Calabrese Salami & Roasted Red Peppers Wood Fired Pizza 420g', store: 'Aldi', price: 7.99, image: './assets/products/Specially Selected Calabrese Salami & Roasted Red Peppers Wood Fired Pizza 420g.png' },
+    { name: 'Finish Ultimate Dishwashing Tablets 46 Pack', store: 'Aldi', price: 22.99, image: './assets/products/Finish-Ultimate-46-Pack.png' },
+    { name: 'El Tora Fajita Seasoning 40g', store: 'Aldi', price: 1.29, image: './assets/products/El Tora Fajita Seasoning 40g.png' }
   ];
 
   const screens = {
@@ -649,6 +607,7 @@
   let selectedSide = '';
   let correct = false;
   let currentPair = null;
+  let todaysRounds = [];
 
   function show(name) {
     Object.values(screens).forEach(screen => {
@@ -682,21 +641,72 @@
     };
   }
 
-  function randomizePair(round) {
-    if (Math.random() < 0.5) {
-      return {
-        top: round.left,
-        bottom: round.right
-      };
+  function getDailySeedString() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  function hashString(str) {
+    let h = 1779033703 ^ str.length;
+    for (let i = 0; i < str.length; i++) {
+      h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+      h = (h << 13) | (h >>> 19);
     }
-    return {
-      top: round.right,
-      bottom: round.left
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return (h ^ (h >>> 16)) >>> 0;
+  }
+
+  function mulberry32(seed) {
+    return function() {
+      let t = seed += 0x6D2B79F5;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
 
+  function seededShuffle(array, rand) {
+    const a = array.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildTodaysRounds() {
+    const seed = hashString(getDailySeedString());
+    const rand = mulberry32(seed);
+
+    const shuffled = seededShuffle(products, rand);
+    const sortedByPrice = shuffled.slice().sort((a, b) => a.price - b.price);
+
+    const basePairs = [];
+    for (let i = 0; i < sortedByPrice.length - 1; i++) {
+      basePairs.push([sortedByPrice[i], sortedByPrice[i + 1]]);
+    }
+
+    const pairShuffled = seededShuffle(basePairs, rand);
+    const rounds = [];
+
+    for (let i = 0; i < TOTAL_ROUNDS; i++) {
+      const pair = pairShuffled[i % pairShuffled.length];
+      const flip = rand() < 0.5;
+      rounds.push({
+        top: flip ? pair[0] : pair[1],
+        bottom: flip ? pair[1] : pair[0]
+      });
+    }
+
+    return rounds;
+  }
+
   function renderBattle() {
-    currentPair = randomizePair(rounds[roundIndex]);
+    currentPair = todaysRounds[roundIndex];
 
     document.getElementById('round-chip').textContent = 'Round ' + (roundIndex + 1);
     document.getElementById('survived-chip').textContent = 'Survived ' + survived;
@@ -735,31 +745,32 @@
     if (selectedSide === 'top') document.getElementById('reveal-top-card').classList.add('selected');
     if (selectedSide === 'bottom') document.getElementById('reveal-bottom-card').classList.add('selected');
 
-  if (cheap === 'top') {
-  document.getElementById('reveal-top-card').classList.add('cheapest');
-  topPriceEl.classList.add('price-cheap');
-  bottomPriceEl.classList.add('price-expensive');
-} else {
-  document.getElementById('reveal-bottom-card').classList.add('cheapest');
-  bottomPriceEl.classList.add('price-cheap');
-  topPriceEl.classList.add('price-expensive');
-}
+    if (cheap === 'top') {
+      document.getElementById('reveal-top-card').classList.add('cheapest');
+      topPriceEl.classList.add('price-cheap');
+      bottomPriceEl.classList.add('price-expensive');
+    } else {
+      document.getElementById('reveal-bottom-card').classList.add('cheapest');
+      bottomPriceEl.classList.add('price-cheap');
+      topPriceEl.classList.add('price-expensive');
+    }
 
-if (correct) {
-  if (selectedSide === 'top') {
-    setResultIcon(topIconEl, TICK_SRC, 'Correct');
-  } else {
-    setResultIcon(bottomIconEl, TICK_SRC, 'Correct');
-  }
-} else {
-  if (selectedSide === 'top') {
-    document.getElementById('reveal-top-card').classList.add('wrong');
-    setResultIcon(topIconEl, CROSS_SRC, 'Wrong');
-  } else {
-    document.getElementById('reveal-bottom-card').classList.add('wrong');
-    setResultIcon(bottomIconEl, CROSS_SRC, 'Wrong');
-  }
-}
+    if (correct) {
+      if (selectedSide === 'top') {
+        setResultIcon(topIconEl, TICK_SRC, 'Correct');
+      } else {
+        setResultIcon(bottomIconEl, TICK_SRC, 'Correct');
+      }
+    } else {
+      if (selectedSide === 'top') {
+        document.getElementById('reveal-top-card').classList.add('wrong');
+        setResultIcon(topIconEl, CROSS_SRC, 'Wrong');
+      } else {
+        document.getElementById('reveal-bottom-card').classList.add('wrong');
+        setResultIcon(bottomIconEl, CROSS_SRC, 'Wrong');
+      }
+    }
+
     document.getElementById('reveal-top-name').textContent = currentPair.top.name;
     document.getElementById('reveal-top-store').textContent = currentPair.top.store;
     topPriceEl.textContent = money(currentPair.top.price);
@@ -778,40 +789,39 @@ if (correct) {
     messageEl.className = 'message ' + (correct ? 'good' : 'bad');
 
     document.getElementById('continue-btn').textContent =
-      correct && roundIndex < rounds.length - 1 ? 'Go to round ' + (roundIndex + 2) : 'See result';
+      correct && roundIndex < todaysRounds.length - 1 ? 'Go to round ' + (roundIndex + 2) : 'See result';
   }
 
   function buildShareText(roundsSurvived) {
-    const totalRounds = 5;
     let squares = '';
 
-    if (roundsSurvived === 0) {
-      squares = '🟥⬛⬛⬛⬛';
-    } else if (roundsSurvived >= totalRounds) {
-      squares = '🟩🟩🟩🟩🟩';
+    if (roundsSurvived <= 0) {
+      squares = '🟥' + '⬛'.repeat(TOTAL_ROUNDS - 1);
+    } else if (roundsSurvived >= TOTAL_ROUNDS) {
+      squares = '🟩'.repeat(TOTAL_ROUNDS);
     } else {
-      const greens = '🟩'.repeat(roundsSurvived);
-      const red = '🟥';
-      const blanks = '⬛'.repeat(totalRounds - roundsSurvived - 1);
-      squares = greens + red + blanks;
+      squares = '🟩'.repeat(roundsSurvived) + '🟥' + '⬛'.repeat(TOTAL_ROUNDS - roundsSurvived - 1);
     }
 
-    const header = `2 May · PRICEDUX · Rounds: ${squares}`;
+    const seedDate = getDailySeedString();
+    const header = `${seedDate} · PRICEDUX · Rounds: ${squares}`;
 
     let joke = '';
-    if (roundsSurvived === 0) {
-      joke = "Hey buddy, nice try testing your price IQ. Don't beat yourself up about a 1st round duck 🙂";
-    } else if (roundsSurvived === 1) {
+    if (roundsSurvived >= 1 && roundsSurvived <= 5) {
+      joke = "Hey buddy, nice try testing your price IQ. Don't beat yourself up about an early duck 🙂";
+    } else if (roundsSurvived >= 6 && roundsSurvived <= 9) {
       joke = "Well, at least you had a crack. Come back soonish! 👍";
-    } else if (roundsSurvived === 2) {
+    } else if (roundsSurvived >= 10 && roundsSurvived <= 13) {
       joke = "You've got some price smarts. Good job! 🥊";
-    } else if (roundsSurvived === 3) {
+    } else if (roundsSurvived >= 14 && roundsSurvived <= 17) {
       joke = "You know your prices! Kudos bro! 😎";
-    } else if (roundsSurvived >= 4) {
+    } else if (roundsSurvived >= 18 && roundsSurvived <= 20) {
       joke = "My god, you're the friggin Albert F Einstein of the supermarket! 👑";
+    } else {
+      joke = "Hey buddy, nice try testing your price IQ. Don't beat yourself up about an early duck 🙂";
     }
 
-    return `${header}\n\n${joke}\n\nPlay PRICEDUX:\nhttps://your-game-url-here.com`;
+    return `${header}\n\n${joke}\n\nPlay PRICEDUX:\n${SHARE_URL}`;
   }
 
   function pick(side) {
@@ -829,6 +839,8 @@ if (correct) {
   }
 
   window.addEventListener('DOMContentLoaded', () => {
+    todaysRounds = buildTodaysRounds();
+
     const splashPlayBtn = document.getElementById('splash-play-btn');
     const playBtn = document.getElementById('play-btn');
     const pickTop = document.getElementById('pick-top');
@@ -845,6 +857,7 @@ if (correct) {
 
     if (playBtn) {
       playBtn.addEventListener('click', () => {
+        todaysRounds = buildTodaysRounds();
         roundIndex = 0;
         survived = 0;
         selectedSide = '';
@@ -859,7 +872,7 @@ if (correct) {
 
     if (continueBtn) {
       continueBtn.addEventListener('click', () => {
-        if (!correct || roundIndex === rounds.length - 1) {
+        if (!correct || roundIndex === todaysRounds.length - 1) {
           document.getElementById('share-text').textContent = buildShareText(survived);
           show('share');
           return;
@@ -883,7 +896,7 @@ if (correct) {
 
         if (navigator.share) {
           try {
-            await navigator.share({ title: 'PRICEDUX', text, url: 'https://your-game-url-here.com' });
+            await navigator.share({ title: 'PRICEDUX', text, url: SHARE_URL });
             return;
           } catch (err) {}
         }
