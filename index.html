@@ -735,28 +735,31 @@
     if (selectedSide === 'top') document.getElementById('reveal-top-card').classList.add('selected');
     if (selectedSide === 'bottom') document.getElementById('reveal-bottom-card').classList.add('selected');
 
-    if (cheap === 'top') {
-      document.getElementById('reveal-top-card').classList.add('cheapest');
-      topPriceEl.classList.add('price-cheap');
-      bottomPriceEl.classList.add('price-expensive');
-      setResultIcon(topIconEl, TICK_SRC, 'Correct');
-    } else {
-      document.getElementById('reveal-bottom-card').classList.add('cheapest');
-      bottomPriceEl.classList.add('price-cheap');
-      topPriceEl.classList.add('price-expensive');
-      setResultIcon(bottomIconEl, TICK_SRC, 'Correct');
-    }
+  if (cheap === 'top') {
+  document.getElementById('reveal-top-card').classList.add('cheapest');
+  topPriceEl.classList.add('price-cheap');
+  bottomPriceEl.classList.add('price-expensive');
+} else {
+  document.getElementById('reveal-bottom-card').classList.add('cheapest');
+  bottomPriceEl.classList.add('price-cheap');
+  topPriceEl.classList.add('price-expensive');
+}
 
-    if (!correct && selectedSide === 'top') {
-      document.getElementById('reveal-top-card').classList.add('wrong');
-      setResultIcon(topIconEl, CROSS_SRC, 'Wrong');
-    }
-
-    if (!correct && selectedSide === 'bottom') {
-      document.getElementById('reveal-bottom-card').classList.add('wrong');
-      setResultIcon(bottomIconEl, CROSS_SRC, 'Wrong');
-    }
-
+if (correct) {
+  if (selectedSide === 'top') {
+    setResultIcon(topIconEl, TICK_SRC, 'Correct');
+  } else {
+    setResultIcon(bottomIconEl, TICK_SRC, 'Correct');
+  }
+} else {
+  if (selectedSide === 'top') {
+    document.getElementById('reveal-top-card').classList.add('wrong');
+    setResultIcon(topIconEl, CROSS_SRC, 'Wrong');
+  } else {
+    document.getElementById('reveal-bottom-card').classList.add('wrong');
+    setResultIcon(bottomIconEl, CROSS_SRC, 'Wrong');
+  }
+}
     document.getElementById('reveal-top-name').textContent = currentPair.top.name;
     document.getElementById('reveal-top-store').textContent = currentPair.top.store;
     topPriceEl.textContent = money(currentPair.top.price);
