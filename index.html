@@ -437,7 +437,7 @@
   <section class="screen active" id="splash-screen">
     <div class="panel">
       <img src="./docketduel.png" alt="Docket Duel" class="splash-logo" onerror="this.style.display='none'">
-      <p class="splash-sub">ENTER THE RING</p>
+      <p class="splash-sub">TEST YOUR PRICE IQ</p>
       <button class="cta" id="splash-play-btn" type="button">Play</button>
     </div>
   </section>
@@ -770,8 +770,8 @@
 
     const messageEl = document.getElementById('reveal-message');
     messageEl.textContent = correct
-      ? 'Correct. You survive this round.'
-      : 'Bugger. You stuffed this one. Play again tomorrow. Cmon, you know you want to! 😎';
+      ? 'Correct. You survived this round.'
+      : 'Bugger. You fluffed it. Play again tomorrow. Cmon, you know you want to! 😎';
     messageEl.className = 'message ' + (correct ? 'good' : 'bad');
 
     document.getElementById('continue-btn').textContent =
@@ -797,15 +797,15 @@
 
     let joke = '';
     if (roundsSurvived === 0) {
-      joke = "Hey buddy, nice try stepping into the ring. Don't beat yourself up about a 1st round KO 🙂";
+      joke = "Hey buddy, nice try testing your price IQ. Don't beat yourself up about a 1st round duck 🙂";
     } else if (roundsSurvived === 1) {
-      joke = "Well, at least you handled a few punches. Get back in the ring soon! 👍";
+      joke = "Well, at least you had a crack. Come back soonish! 👍";
     } else if (roundsSurvived === 2) {
-      joke = "You landed some nice punches. Good job! 🥊";
+      joke = "You've got some price smarts. Good job! 🥊";
     } else if (roundsSurvived === 3) {
-      joke = "You can dance in the ring! Kudos bro! 😎";
+      joke = "You know your prices! Kudos bro! 😎";
     } else if (roundsSurvived >= 4) {
-      joke = "Dance like a butterfly, sting like a bee. You are a champion! 👑";
+      joke = "My god, you're the friggin Albert F Einstein of the supermarket! 👑";
     }
 
     return `${header}\n\n${joke}`;
